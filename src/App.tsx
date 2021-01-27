@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Button from "./components/Button";
 import Time from "./components/Time";
 import { ReactComponent as Play } from "./icons/play.svg";
@@ -6,14 +6,26 @@ import { ReactComponent as Pause } from "./icons/pause.svg";
 import { ReactComponent as Reset } from "./icons/reset.svg";
 
 function App() {
+  const totalRound = 5,
+    totalExercise = 5,
+    exerciseTime = 30,
+    breakTime = 60;
+  const totalTime = (exerciseTime * totalExercise + breakTime) * totalRound;
+
+  const [playing, setPlaying] = useState(false);
+
   const currentRound = 1,
-    totalRound = 5;
-  const currentExercise = 1,
-    totalExercise = 5;
-  const elapsed = 100,
-    remaining = 100,
-    countdown = 100;
-  const playing = false;
+    currentExercise = 1,
+    elapsed = 0,
+    currentElapsed = 0,
+    exercise = true;
+
+  const remaining = totalTime - elapsed,
+    countdown = (exercise ? exerciseTime : breakTime) - currentElapsed;
+
+  function playOnClick() {
+    setPlaying(!playing);
+  }
 
   return (
     <div className="app">
@@ -57,11 +69,11 @@ function App() {
         <div className="right-button">
           {playing ? (
             <Button>
-              <Pause></Pause>
+              <Pause onClick={playOnClick}></Pause>
             </Button>
           ) : (
             <Button>
-              <Play></Play>
+              <Play onClick={playOnClick}></Play>
             </Button>
           )}
         </div>
