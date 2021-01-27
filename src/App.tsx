@@ -9,22 +9,38 @@ function App() {
   const totalRound = 5,
     totalExercise = 5,
     exerciseTime = 30,
-    breakTime = 60;
-  const totalTime = (exerciseTime * totalExercise + breakTime) * totalRound;
+    restTime = 60;
 
   const [playing, setPlaying] = useState(false);
+  const [rest, setRest] = useState(false);
+  const [countdown, setCountdown] = useState(rest ? restTime : exerciseTime);
+  const [currentRound, setCurrentRound] = useState(1);
+  const [currentExercise, setCurrentExercise] = useState(1);
 
-  const currentRound = 1,
-    currentExercise = 1,
-    elapsed = 0,
-    currentElapsed = 0,
-    exercise = true;
+  const roundTIme = exerciseTime * totalExercise + restTime;
+  const totalTime = roundTIme * totalRound;
+  const remaining =
+    countdown +
+    exerciseTime * (totalExercise - currentExercise) +
+    (rest ? 0 : restTime) +
+    roundTIme * (totalRound - currentRound);
 
-  const remaining = totalTime - elapsed,
-    countdown = (exercise ? exerciseTime : breakTime) - currentElapsed;
+  function resetOnClick() {
+    setPlaying(false);
+  }
 
   function playOnClick() {
-    setPlaying(!playing);
+    setPlaying(true);
+    var currentTimeLeft = countdown;
+    var countdownTimer = setInterval(function () {
+      currentTimeLeft--;
+      setCountdown(currentTimeLeft);
+      if (currentTimeLeft <= 0) clearInterval(countdownTimer);
+    }, 1000);
+  }
+
+  function pauseOnClick() {
+    setPlaying(false);
   }
 
   return (
@@ -37,7 +53,7 @@ function App() {
         <div className="text-center">
           <div className="label">ELAPSED</div>
           <div className="content">
-            <Time seconds={elapsed}></Time>
+            <Time seconds={totalTime - remaining}></Time>
           </div>
         </div>
 
@@ -56,7 +72,7 @@ function App() {
 
       <div className="flex-row control-row">
         <div className="left-button">
-          <Button>
+          <Button onClick={resetOnClick}>
             <Reset></Reset>
           </Button>
         </div>
@@ -68,12 +84,12 @@ function App() {
 
         <div className="right-button">
           {playing ? (
-            <Button>
-              <Pause onClick={playOnClick}></Pause>
+            <Button onClick={pauseOnClick}>
+              <Pause></Pause>
             </Button>
           ) : (
-            <Button>
-              <Play onClick={playOnClick}></Play>
+            <Button onClick={playOnClick}>
+              <Play></Play>
             </Button>
           )}
         </div>
