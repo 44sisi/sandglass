@@ -70,7 +70,7 @@ function App() {
 
   return (
     <div className="app">
-      <div className="countdown">
+      <div className="countdown text-center">
         <Time seconds={countdown}></Time>
       </div>
 
