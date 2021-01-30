@@ -1,21 +1,27 @@
 import React, { useState } from "react";
 import Button from "./components/Button";
 import Time from "./components/Time";
+import { ReactComponent as Reset } from "./icons/reset.svg";
 import { ReactComponent as Play } from "./icons/play.svg";
 import { ReactComponent as Pause } from "./icons/pause.svg";
-import { ReactComponent as Reset } from "./icons/reset.svg";
 
 let Timer: any;
 
+function speak(text: string) {
+  const synth = window.speechSynthesis;
+  let utterThis = new SpeechSynthesisUtterance(text);
+  synth.speak(utterThis);
+}
+
 function App() {
-  const totalRound = 5,
-    totalExercise = 5,
-    exerciseTime = 30,
-    restTime = 60;
+  const totalRound = 2,
+    totalExercise = 2,
+    exerciseTime = 3,
+    restTime = 4;
 
   const roundExerciseTime = exerciseTime * totalExercise;
-  const roundTIme = roundExerciseTime + restTime;
-  const totalTime = roundTIme * totalRound;
+  const roundTime = roundExerciseTime + restTime;
+  const totalTime = roundTime * totalRound;
 
   const initialState = {
     playing: false,
@@ -31,19 +37,15 @@ function App() {
   }
 
   let remainingTime = totalTime - elapsedTime;
-  let currentRound = Math.floor(elapsedTime / roundTIme) + 1;
-  let roundElapsedTime = elapsedTime % roundTIme;
+  let currentRound = Math.floor(elapsedTime / roundTime) + 1;
+  let roundElapsedTime = elapsedTime % roundTime;
   let rest = roundElapsedTime >= roundExerciseTime;
   let currentExercise = rest
     ? totalExercise
     : Math.floor(roundElapsedTime / exerciseTime) + 1;
   let countdown = rest
-    ? roundTIme - roundElapsedTime
+    ? roundTime - roundElapsedTime
     : exerciseTime * currentExercise - roundElapsedTime;
-
-  document.querySelector("html")!.style.background = rest
-    ? "#25b174"
-    : "#222222";
 
   function resetTimer() {
     setPlaying(false);
@@ -53,13 +55,8 @@ function App() {
 
   function playOnClick() {
     setPlaying(true);
-    let timeElapsed = elapsedTime;
     Timer = setInterval(function () {
-      timeElapsed++;
-      setElapsedTime(timeElapsed);
-      if (timeElapsed >= totalTime) {
-        resetTimer();
-      }
+      setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
     }, 1000);
   }
 
@@ -67,6 +64,29 @@ function App() {
     setPlaying(false);
     clearInterval(Timer);
   }
+
+  if (elapsedTime >= totalTime) {
+    resetTimer();
+  }
+
+  if (
+    playing &&
+    (rest
+      ? [roundExerciseTime, roundTime].includes(roundElapsedTime)
+      : !(roundElapsedTime % exerciseTime))
+  ) {
+    console.log({
+      elapsedTime,
+      currentRound,
+      roundElapsedTime,
+      currentExercise,
+    });
+    // speak(`${currentExercise}`);
+  }
+
+  document.querySelector("html")!.style.background = rest
+    ? "#25b174"
+    : "#222222";
 
   return (
     <div className="app">
