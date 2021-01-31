@@ -20,10 +20,10 @@ function speak(text: string) {
 }
 
 function App() {
-  const totalRound = 2,
-    totalExercise = 2,
-    exerciseTime = 4,
-    restTime = 5;
+  const totalRound = 5,
+    totalExercise = 5,
+    exerciseTime = 30,
+    restTime = 60;
 
   const roundExerciseTime = exerciseTime * totalExercise;
   const roundTime = roundExerciseTime + restTime;
