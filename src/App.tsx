@@ -50,7 +50,6 @@ function App() {
     : exerciseTime * currentExercise - roundElapsedTime;
 
   function resetTimer() {
-    setPlaying(false);
     clearInterval(Timer);
     resetState();
   }
@@ -67,7 +66,7 @@ function App() {
     clearInterval(Timer);
   }
 
-  if (elapsedTime >= totalTime) {
+  if (elapsedTime >= totalTime - restTime) {
     resetTimer();
   }
 
@@ -77,10 +76,10 @@ function App() {
       ? [roundExerciseTime, roundTime].includes(roundElapsedTime)
       : !(roundElapsedTime % exerciseTime))
   ) {
-    rest
+    elapsedTime === totalTime - restTime
+      ? speak("your timer is complete")
+      : rest
       ? speak("rest")
-      : elapsedTime === totalTime
-      ? speak("your timer has completed")
       : speak(`exercise ${currentExercise}`);
   }
 
