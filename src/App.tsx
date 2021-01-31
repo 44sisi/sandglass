@@ -7,9 +7,14 @@ import { ReactComponent as Pause } from "./icons/pause.svg";
 
 let Timer: any;
 
+const synth = window.speechSynthesis;
+const voices = synth.getVoices();
+console.log(voices);
+// console.log(voices[0].name);
+
 function speak(text: string) {
-  const synth = window.speechSynthesis;
   let utterThis = new SpeechSynthesisUtterance(text);
+  // utterThis.voice = voices[0];
   synth.speak(utterThis);
 }
 
@@ -81,7 +86,11 @@ function App() {
       roundElapsedTime,
       currentExercise,
     });
-    // speak(`${currentExercise}`);
+    rest
+      ? speak("rest")
+      : elapsedTime === totalTime
+      ? speak("your timer has completed")
+      : speak(`exercise ${currentExercise}`);
   }
 
   document.querySelector("html")!.style.background = rest
