@@ -8,21 +8,18 @@ import { ReactComponent as Pause } from "./icons/pause.svg";
 let Timer: any;
 
 const synth = window.speechSynthesis;
-const voices = synth.getVoices();
-console.log(voices);
-// console.log(voices[0].name);
+const utterThis = new SpeechSynthesisUtterance();
 
 function speak(text: string) {
-  let utterThis = new SpeechSynthesisUtterance(text);
-  // utterThis.voice = voices[0];
+  utterThis.text = text;
   synth.speak(utterThis);
 }
 
 function App() {
-  const totalRound = 2,
-    totalExercise = 2,
-    exerciseTime = 3,
-    restTime = 4;
+  const totalRound = 5,
+    totalExercise = 5,
+    exerciseTime = 30,
+    restTime = 60;
 
   const roundExerciseTime = exerciseTime * totalExercise;
   const roundTime = roundExerciseTime + restTime;
@@ -80,12 +77,6 @@ function App() {
       ? [roundExerciseTime, roundTime].includes(roundElapsedTime)
       : !(roundElapsedTime % exerciseTime))
   ) {
-    console.log({
-      elapsedTime,
-      currentRound,
-      roundElapsedTime,
-      currentExercise,
-    });
     rest
       ? speak("rest")
       : elapsedTime === totalTime
@@ -112,7 +103,7 @@ function App() {
         </div>
 
         <div className="text-center">
-          <div className="label">EXERCISES</div>
+          <div className="label">EXERCISE</div>
           <div className="content">{`${currentExercise} / ${totalExercise}`}</div>
         </div>
 
@@ -132,8 +123,7 @@ function App() {
         </div>
 
         <div className="text-center rounds">
-          <span>ROUNDS: </span>
-          <span>{`${currentRound} / ${totalRound}`}</span>
+          <span>ROUND {`${currentRound} / ${totalRound}`}</span>
         </div>
 
         <div className="right-button">
