@@ -4,8 +4,9 @@ import Time from "./components/Time";
 import { ReactComponent as Reset } from "./icons/reset.svg";
 import { ReactComponent as Play } from "./icons/play.svg";
 import { ReactComponent as Pause } from "./icons/pause.svg";
+import NoSleep from "nosleep.js";
 
-let Timer: any;
+let Timer: NodeJS.Timeout;
 
 const synth = window.speechSynthesis;
 const utterThis = new SpeechSynthesisUtterance();
@@ -18,6 +19,8 @@ function speak(text: string) {
   utterThis.text = text;
   synth.speak(utterThis);
 }
+
+const noSleep = new NoSleep();
 
 function App() {
   const totalRound = 5,
@@ -54,11 +57,13 @@ function App() {
     : exerciseTime * currentExercise - roundElapsedTime;
 
   function resetTimer() {
+    noSleep.disable();
     clearInterval(Timer);
     resetState();
   }
 
   function playOnClick() {
+    noSleep.enable();
     setPlaying(true);
     Timer = setInterval(function () {
       setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
@@ -66,6 +71,7 @@ function App() {
   }
 
   function pauseOnClick() {
+    noSleep.disable();
     setPlaying(false);
     clearInterval(Timer);
   }
