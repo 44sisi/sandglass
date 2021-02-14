@@ -4,6 +4,7 @@ import Time from "./components/Time";
 import { ReactComponent as Reset } from "./icons/reset.svg";
 import { ReactComponent as Play } from "./icons/play.svg";
 import { ReactComponent as Pause } from "./icons/pause.svg";
+import NoSleep from "nosleep.js";
 
 let Timer: NodeJS.Timeout;
 
@@ -19,21 +20,7 @@ function speak(text: string) {
   synth.speak(utterThis);
 }
 
-let wakeLock: WakeLock | null;
-
-const requestWakeLock = async () => {
-  try {
-    wakeLock = await navigator.wakeLock.request("screen");
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-const releaseWakeLock = () => {
-  wakeLock?.release().then(() => {
-    wakeLock = null;
-  });
-};
+const noSleep = new NoSleep();
 
 function App() {
   const totalRound = 5,
@@ -70,13 +57,13 @@ function App() {
     : exerciseTime * currentExercise - roundElapsedTime;
 
   function resetTimer() {
-    releaseWakeLock();
+    noSleep.disable();
     clearInterval(Timer);
     resetState();
   }
 
   function playOnClick() {
-    requestWakeLock();
+    noSleep.enable();
     setPlaying(true);
     Timer = setInterval(function () {
       setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
@@ -84,7 +71,7 @@ function App() {
   }
 
   function pauseOnClick() {
-    releaseWakeLock();
+    noSleep.disable();
     setPlaying(false);
     clearInterval(Timer);
   }
