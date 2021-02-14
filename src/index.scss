@@ -101,3 +101,14 @@ svg {
 .right-button {
   border-left: 1px solid white;
 }
+
+@media only screen and (max-width: 600px) {
+  .app {
+    width: 100%;
+    height: 100%;
+  }
+
+  .countdown {
+    font-size: 120px;
+  }
+}
