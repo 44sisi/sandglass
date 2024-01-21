@@ -133,7 +133,7 @@ function App() {
         </div>
 
         <div className="text-center rounds">
-          <span>ROUND {`${currentRound} / `}</span>
+          <span>RND {`${currentRound} / `}</span>
           <input
             type="number"
             min="1"
