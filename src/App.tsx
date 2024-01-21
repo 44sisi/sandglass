@@ -23,22 +23,23 @@ function speak(text: string) {
 const noSleep = new NoSleep();
 
 function App() {
-  const totalRound = 5,
-    totalExercise = 5,
+  const initialState = {
+    playing: false,
+    elapsedTime: 0,
+    totalRound: 5,
+  };
+
+  const [playing, setPlaying] = useState(initialState.playing);
+  const [elapsedTime, setElapsedTime] = useState(initialState.elapsedTime);
+  const [totalRound, setTotalRound] = useState(initialState.totalRound);
+
+  const totalExercise = 5,
     exerciseTime = 30,
     restTime = 60;
 
   const roundExerciseTime = exerciseTime * totalExercise;
   const roundTime = roundExerciseTime + restTime;
   const totalTime = roundTime * totalRound;
-
-  const initialState = {
-    playing: false,
-    elapsedTime: 0,
-  };
-
-  const [playing, setPlaying] = useState(initialState.playing);
-  const [elapsedTime, setElapsedTime] = useState(initialState.elapsedTime);
 
   function resetState() {
     setPlaying(initialState.playing);
@@ -132,7 +133,15 @@ function App() {
         </div>
 
         <div className="text-center rounds">
-          <span>ROUND {`${currentRound} / ${totalRound}`}</span>
+          <span>RND {`${currentRound} / `}</span>
+          <input
+            type="number"
+            min="1"
+            max="100"
+            value={totalRound}
+            onChange={(e) => setTotalRound(e.target.valueAsNumber)}
+            className="total-round"
+          />
         </div>
 
         <div className="right-button">
