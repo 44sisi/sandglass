@@ -102,6 +102,13 @@ svg {
   border-left: 1px solid white;
 }
 
+.total-round {
+  height: 34px;
+  width: 42px;
+  margin-left: 8px;
+  font-size: 30px;
+}
+
 @media only screen and (max-width: 600px) {
   .app {
     width: 100%;
